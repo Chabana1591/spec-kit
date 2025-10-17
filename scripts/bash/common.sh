@@ -1,32 +1,39 @@
 #!/usr/bin/env bash
 # Common functions and variables for all scripts
+# 全スクリプト用の共通関数と変数
 
 # Get repository root, with fallback for non-git repositories
+# リポジトリルートを取得、非gitリポジトリ用のフォールバック付き
 get_repo_root() {
     if git rev-parse --show-toplevel >/dev/null 2>&1; then
         git rev-parse --show-toplevel
     else
         # Fall back to script location for non-git repos
+        # 非gitリポジトリの場合はスクリプト場所にフォールバック
         local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         (cd "$script_dir/../../.." && pwd)
     fi
 }
 
 # Get current branch, with fallback for non-git repositories
+# 現在のブランチを取得、非gitリポジトリ用のフォールバック付き
 get_current_branch() {
     # First check if SPECIFY_FEATURE environment variable is set
+    # 最初にSPECIFY_FEATURE環境変数が設定されているかチェック
     if [[ -n "${SPECIFY_FEATURE:-}" ]]; then
         echo "$SPECIFY_FEATURE"
         return
     fi
 
     # Then check git if available
+    # 次にgitが利用可能かチェック
     if git rev-parse --abbrev-ref HEAD >/dev/null 2>&1; then
         git rev-parse --abbrev-ref HEAD
         return
     fi
 
     # For non-git repos, try to find the latest feature directory
+    # 非gitリポジトリの場合、最新の機能ディレクトリを探す
     local repo_root=$(get_repo_root)
     local specs_dir="$repo_root/specs"
 

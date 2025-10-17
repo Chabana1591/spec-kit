@@ -1,8 +1,8 @@
 ---
-description: Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync.
+description: Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync. / インタラクティブまたは提供された原則入力からプロジェクト憲法を作成・更新し、すべての依存テンプレートの同期を確保
 ---
 
-## User Input
+## User Input / ユーザー入力
 
 ```text
 $ARGUMENTS
@@ -10,15 +10,25 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
-## Outline
+進行前にユーザー入力を**必ず**考慮してください（空でない場合）。
+
+## Outline / 概要
 
 You are updating the project constitution at `/memory/constitution.md`. This file is a TEMPLATE containing placeholder tokens in square brackets (e.g. `[PROJECT_NAME]`, `[PRINCIPLE_1_NAME]`). Your job is to (a) collect/derive concrete values, (b) fill the template precisely, and (c) propagate any amendments across dependent artifacts.
 
+`/memory/constitution.md`のプロジェクト憲法を更新しています。このファイルは角括弧内のプレースホルダートークン（例：`[PROJECT_NAME]`、`[PRINCIPLE_1_NAME]`）を含むテンプレートです。あなたの仕事は（a）具体的な値を収集・導出し、（b）テンプレートを正確に記入し、（c）依存成果物に修正を伝播することです。
+
 Follow this execution flow:
+
+この実行フローに従ってください：
 
 1. Load the existing constitution template at `/memory/constitution.md`.
    - Identify every placeholder token of the form `[ALL_CAPS_IDENTIFIER]`.
    **IMPORTANT**: The user might require less or more principles than the ones used in the template. If a number is specified, respect that - follow the general template. You will update the doc accordingly.
+
+   `/memory/constitution.md`の既存憲法テンプレートを読み込みます。
+   - `[ALL_CAPS_IDENTIFIER]`形式のすべてのプレースホルダートークンを特定します。
+   **重要**：ユーザーはテンプレートで使用されているものより少ない、または多い原則を要求する場合があります。数が指定されている場合は、それを尊重し、一般的なテンプレートに従ってください。それに応じて文書を更新します。
 
 2. Collect/derive values for placeholders:
    - If user input (conversation) supplies a value, use it.
@@ -29,6 +39,16 @@ Follow this execution flow:
      * MINOR: New principle/section added or materially expanded guidance.
      * PATCH: Clarifications, wording, typo fixes, non-semantic refinements.
    - If version bump type ambiguous, propose reasoning before finalizing.
+
+   プレースホルダーの値を収集・導出します：
+   - ユーザー入力（会話）が値を提供する場合、それを使用します。
+   - そうでなければ、既存のリポジトリコンテキスト（README、ドキュメント、埋め込まれた以前の憲法バージョン）から推測します。
+   - ガバナンス日付について：`RATIFICATION_DATE`は元の採択日（不明な場合は質問またはTODOマーク）、`LAST_AMENDED_DATE`は変更が行われた場合は今日、そうでなければ以前のものを保持します。
+   - `CONSTITUTION_VERSION`はセマンティックバージョニングルールに従って増分する必要があります：
+     * MAJOR：後方互換しないガバナンス・原則の削除または再定義
+     * MINOR：新しい原則・セクションの追加または実質的に拡張されたガイダンス
+     * PATCH：明確化、文言、誤字修正、非セマンティック改良
+   - バージョンバンプタイプが曖昧な場合、確定前に理由を提案します。
 
 3. Draft the updated constitution content:
    - Replace every placeholder with concrete text (no bracketed tokens left except intentionally retained template slots that the project has chosen not to define yet—explicitly justify any left).
